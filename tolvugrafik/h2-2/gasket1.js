@@ -29,11 +29,7 @@ window.onload = function init()
 
     var u = add( vertices[0], vertices[1] );
     var v = add( vertices[0], vertices[2] );
-    // Felum þetta
-    //var p = scale( 0.25, add( u, v ) );
-
-    // Skilgreinum upphafspunktinn p frekar sem punkt í (100,100)
-    var p = vec2(100, 100);
+    var p = scale( 0.25, add( u, v ) );
 
     // And, add our initial point into our array of points
 
@@ -44,7 +40,16 @@ window.onload = function init()
     // last point and a randomly chosen vertex
 
     for ( var i = 0; points.length < NumPoints; ++i ) {
-        var j = Math.floor(Math.random() * 3);
+        var j = null;
+        var random = Math.random();
+        if (random < 0.05) {
+            j = 0;
+        } else if (random < 0.10) {
+            j = 2;
+        } else {
+            j = 1;
+        }
+
         p = add( points[i], vertices[j] );
         p = scale( 0.5, p );
         points.push( p );

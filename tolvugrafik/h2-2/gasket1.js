@@ -42,11 +42,11 @@ window.onload = function init()
     for ( var i = 0; points.length < NumPoints; ++i ) {
         var random = Math.random();
         if (random < 0.05) {
-            var j = 0;
+            var j = 1;
         } else if (random < 0.10) {
             var j = 2;
         } else {
-            var j = 1;
+            var j = 0;
         }
 
         p = add( points[i], vertices[j] );

@@ -44,7 +44,7 @@ window.onload = function init() {
     gl.enableVertexAttribArray(vPosition);
 
     document.getElementById("slider").oninput = function(event) {
-        numCirclePoints = event.target.value;
+        numCirclePoints = parseInt(event.target.value);
         createCirclePoints( center, radius, numCirclePoints );
         gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
         render();

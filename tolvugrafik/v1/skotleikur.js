@@ -6,6 +6,8 @@
 /////////////////////////////////////////////////////////////////
 var canvas;
 var gl;
+var renderId;
+var program;
 //var vPosition;
 
 var mouseX;             // Old value of x-coordinate  
@@ -13,6 +15,7 @@ var movement = false;   // Do we move the paddle?
 var birds = [];
 var birdVertices;
 var birdBufferId;
+var birdsLeft = 7;
 var gunVertices;
 var bulletVertices;
 var bullets = [];
@@ -38,12 +41,12 @@ window.onload = function init() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
     
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.8, 0.8, 0.8, 1.0 );
-
+    gl.clearColor( 0.8, 0.92, 0.95, 1.0 );
+    
     //
     //  Load shaders and initialize attribute buffers
     //
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+    program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
     gunVertices = [
@@ -51,20 +54,10 @@ window.onload = function init() {
         vec2( 0, -0.8 ),
         vec2(  0.1, -0.9 )
     ];
-    
-    // Load the data into the GPU
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-
-    // Associate out shader variables with our data buffer
-    var vPosition = gl.getAttribLocation( program, "vPosition" );
-    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vPosition );
 
     // Event listeners for mouse
     canvas.addEventListener("mousedown", function(e){
         mouseX = e.clientX;
-        console.log(e.clientX);
         movement = true;
     } );
 
@@ -75,7 +68,6 @@ window.onload = function init() {
     canvas.addEventListener("mousemove", function(e){
         if(movement) {
             var xmove = 2 * (e.clientX - mouseX) / canvas.width;
-            console.log(e.clientX);
             mouseX = e.clientX;
             for(var i = 0; i < 3; i++) {
                 gunVertices[i][0] += xmove;
@@ -85,7 +77,8 @@ window.onload = function init() {
         }
     });
 
-    makeBirds(7);
+    makeBirds(birdsLeft);
+    renderGun();
     render();
 }
 
@@ -129,6 +122,13 @@ function renderBirds() {
             vec2(bird.x, bird.y - bird.height)
         ];
 
+        var birdColor = [
+            vec4(0.2, 0.7, 0.85, 1.0),
+            vec4(0.2, 0.7, 0.85, 1.0),
+            vec4(0.2, 0.7, 0.85, 1.0),
+            vec4(0.2, 0.7, 0.85, 1.0)
+        ];
+
         var birdBufferId = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, birdBufferId);
         gl.bufferData(gl.ARRAY_BUFFER, flatten(birdVertices), gl.DYNAMIC_DRAW);
@@ -137,12 +137,44 @@ function renderBirds() {
         gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(vPosition);
 
+        var birdColorBufferId = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, birdColorBufferId);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten(birdColor), gl.DYNAMIC_DRAW);
+
+        var vColor = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), "vColor");
+        gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(vColor);
+
         gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
     });
 }
 
 function renderGun() {
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(gunVertices), gl.DYNAMIC_DRAW );
+
+    var gunColor = [
+        vec4(0.2, 0.3, 0.5, 1.0),
+        vec4(0.2, 0.3, 0.5, 1.0),
+        vec4(0.2, 0.3, 0.5, 1.0)
+    ];
+    
+    // Load the data into the GPU
+    var gunBufferId = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, gunBufferId );
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(gunVertices), gl.DYNAMIC_DRAW);
+
+    // Associate out shader variables with our data buffer
+    var vPosition = gl.getAttribLocation( program, "vPosition" );
+    gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPosition );
+
+    var gunColorBufferId = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, gunColorBufferId);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(gunColor), gl.DYNAMIC_DRAW);
+
+    var vColor = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), "vColor");
+    gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(vColor);
+
     gl.drawArrays( gl.TRIANGLE_FAN, 0, 3 );
     gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(gunVertices));
 }
@@ -222,15 +254,42 @@ function detectCollision(bird, bullet) {
                 bullets.splice(i, 1);
                 birds.splice(j, 1);
                 stig += "|";
+                birdsLeft -= 1;
                 document.getElementById("stig").innerText = `Stig: ${stig}`;
 
+                if (birdsLeft == 0) {
+                    endGame();
+                    return;
+                }
                 i--;
                 break;
             }
         }
     }
+}
 
-    
+function endGame() {
+    cancelAnimationFrame(renderId);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    const text = "Leik lokið! Þú hefur skotið 7 fugla";
+    const gameOver = document.createElement('div');
+    gameOver.className = "gameOverText";
+    gameOver.innerText = text;
+    document.body.appendChild(gameOver);
+
+    const button = document.createElement("button");
+    button.innerText = "Nýr leikur";
+    button.className = "borderButton";
+    document.body.appendChild(button);
+
+    button.addEventListener("click", function() {
+        reloadGame();
+    });
+}
+
+function reloadGame() {
+    location.reload();
 }
 
 function render() {
@@ -244,5 +303,5 @@ function render() {
     shoot();
     detectCollision();
 
-    window.requestAnimationFrame(render);
+    renderId = window.requestAnimationFrame(render);
 }

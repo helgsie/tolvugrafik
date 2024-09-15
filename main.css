@@ -109,3 +109,24 @@ a {
     display: flex;
     justify-content: center;
 }
+
+.gameOverText {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1rem;
+}
+
+.borderButton {
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid transparent;
+    background-color: skyblue;
+    color: steelblue;
+    font-size: 1rem;
+    padding: 1rem;
+    border-radius: 1rem;
+}

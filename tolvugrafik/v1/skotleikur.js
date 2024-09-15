@@ -15,7 +15,7 @@ var movement = false;   // Do we move the paddle?
 var birds = [];
 var birdVertices;
 var birdBufferId;
-var birdsLeft = 7;
+var birdsLeft = 5;
 var gunVertices;
 var bulletVertices;
 var bullets = [];
@@ -184,7 +184,7 @@ function renderBullet() {
     var bulletX = gunVertices[1][0] - (bulletWidth/2);
     var bulletY = -0.9;
     var bulletHeight = 0.1;
-    var bulletSpeed = 0.1;
+    var bulletSpeed = 0.05;
     bullets.push({ x: bulletX, y: bulletY, width: bulletWidth, height: bulletHeight, speed: bulletSpeed });
 }
 
@@ -194,11 +194,13 @@ function updateBullets() {
     });
 
     bullets = bullets.filter(function(bullet) {
-        return bullet.y < 1.0;
+        return bullet.y < 1.2;
     });
 }
 
 function drawBullets() {
+    var bulletColor = vec4(0.2, 0.3, 0.5, 1.0);
+
     bullets.forEach(function(bullet) {
         var bulletVertices = [
             vec2(bullet.x, bullet.y),
@@ -207,8 +209,22 @@ function drawBullets() {
             vec2(bullet.x, bullet.y + bullet.height)
         ];
 
+        var bulletBufferId = gl.createBuffer();
+        gl.bindBuffer( gl.ARRAY_BUFFER, bulletBufferId );
         gl.bufferData(gl.ARRAY_BUFFER, flatten(bulletVertices), gl.DYNAMIC_DRAW);
-        gl.bufferSubData(gl.ARRAY_BUFFER, 0, flatten(bulletVertices));
+
+        var vPosition = gl.getAttribLocation( program, "vPosition" );
+        gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
+        gl.enableVertexAttribArray( vPosition );
+
+        var bulletColorBufferId = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, bulletColorBufferId);
+        gl.bufferData(gl.ARRAY_BUFFER, flatten([bulletColor, bulletColor, bulletColor, bulletColor]), gl.DYNAMIC_DRAW);
+
+        var vColor = gl.getAttribLocation(gl.getParameter(gl.CURRENT_PROGRAM), "vColor");
+        gl.vertexAttribPointer(vColor, 4, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(vColor);
+
         gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
     });
 }
@@ -233,7 +249,7 @@ function detectCollision(bird, bullet) {
     for (var i = 0; i < bullets.length; i++) {
         var bullet = bullets[i];
 
-        var bulletTop = bullet.y + bullet.height;
+        var bulletTop = bullet.y + bullet.height + 0.05;
         var bulletBottom = bullet.y;
         var bulletLeft = bullet.x;
         var bulletRight = bullet.x + bullet.width;
@@ -272,7 +288,7 @@ function endGame() {
     cancelAnimationFrame(renderId);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const text = "Leik lokið! Þú hefur skotið 7 fugla";
+    const text = "Leik lokið! Þú hefur skotið 5 fugla";
     const gameOver = document.createElement('div');
     gameOver.className = "gameOverText";
     gameOver.innerText = text;

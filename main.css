@@ -86,10 +86,6 @@ ul {
     gap: 1rem;
 }
 
-.linkur {
-    
-}
-
 li {
     border: 1rem;
     background-color: floralwhite;
@@ -112,8 +108,4 @@ a {
 .backbutton {
     display: flex;
     justify-content: center;
-}
-
-.v1Canvas {
-
 }

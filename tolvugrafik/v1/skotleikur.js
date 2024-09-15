@@ -18,7 +18,9 @@ var bulletVertices;
 var bullets = [];
 var bulletFired = false;
 var maxBullets = 3;
+var maxBirds = 3;
 var stopper = false;
+var stig = "";
 
 // Byssa
 var gunPosition = vec2(0.0, 0.4);
@@ -83,30 +85,42 @@ window.onload = function init() {
         }
     });
 
-    makeBirds();
+    makeBirds(7);
     render();
 }
 
-function makeBirds() {
+function makeBirds(count) {
     // fylla fylkið birds með 3 handahófskennt staðsettum "fuglum"
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < count; i++) {
         var birdX = Math.random() * 1.6 - 0.8;
         var birdY = Math.random() * 0.7 + 0.3;
-        var birdWidth = 0.2;
+        var birdWidth = 0.15;
         var birdHeight = 0.075;
-        var birdSpeed = Math.random() * 0.02 + 0.005;
-        var birdDirection = 1;
+        var birdSpeed = Math.random() * 0.007 + 0.005;
+        var birdDirection = Math.random() < 0.5 ? -1 : 1;
 
         birds.push({ x: birdX, y: birdY, width: birdWidth, height: birdHeight, speed: birdSpeed, direction: birdDirection });
     }
 }
 
 function renderBirds() {
-    birds.forEach(function(bird) {
+    birds.forEach(function(bird, index) {
         bird.x += bird.speed * bird.direction;
-        if (bird.x + bird.width > 1.0 || bird.x < -1.0) {
-            bird.direction *= -1; // Reverse direction
+
+        if (bird.x + bird.width < -1.0) {
+            bird.x = 1;
+            bird.y = Math.random() * 0.7 + 0.3;
+            bird.direction = Math.random() < 0.5 ? -1 : 1;
         }
+        if (bird.x > 1.0) {
+            bird.x = -1.15;
+            bird.y = Math.random() * 0.7 + 0.3;
+            bird.direction = Math.random() < 0.5 ? -1 : 1;
+        }
+
+        bullets = bullets.filter(function(bullet) {
+            return bullet.y < 1.0;
+        });
 
         birdVertices = [
             vec2(bird.x, bird.y),
@@ -183,24 +197,40 @@ function shoot() {
     });
 }
 
-function detectCollision() {
+function detectCollision(bird, bullet) {
+    for (var i = 0; i < bullets.length; i++) {
+        var bullet = bullets[i];
 
-    /*for (var i = 0; i < birds.length; i++) {
-        var birdBounds = [
-            birds[i],
-            birds[i],
-            birds[i],
-            birds[i]
-        ];
+        var bulletTop = bullet.y + bullet.height;
+        var bulletBottom = bullet.y;
+        var bulletLeft = bullet.x;
+        var bulletRight = bullet.x + bullet.width;
 
-        if (birdVertices[i] > bulletVertices[i]) {
+        for (var j = 0; j < birds.length; j++) {
+            var bird = birds[j];
 
+            var birdTop = bird.y + bird.height;
+            var birdBottom = bird.y;
+            var birdLeft = bird.x;
+            var birdRight = bird.x + bird.width;
+
+            if (bulletRight > birdLeft && 
+                bulletLeft < birdRight &&
+                bulletTop > birdBottom &&
+                bulletBottom < birdTop) {
+
+                bullets.splice(i, 1);
+                birds.splice(j, 1);
+                stig += "|";
+                document.getElementById("stig").innerText = `Stig: ${stig}`;
+
+                i--;
+                break;
+            }
         }
-    }*/
-}
+    }
 
-function birdDeath() {
-
+    
 }
 
 function render() {

@@ -1,27 +1,119 @@
 * {
-    color: black;
+    margin: 0;
 }
 
 body {
     font-family: Verdana, Tahoma, sans-serif;
-    font-size: 18px;
-    background-color: azure;
+    font-size: 14px;
+    margin: 0 3rem;
+    background-color: powderblue;
+    color: steelblue;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    margin: 1rem 3rem;
+    gap: 1rem;
 }
 
-nav ul {
-    padding-inline-start: 0;
-    list-style: none;
+.forsida {
+    background-color: mistyrose;
+    color: palevioletred;
+}
+
+.forsida a {
+    color: palevioletred;
+}
+
+.tolvugrafik {
+    background-color: powderblue;
+    color: steelblue;
+}
+
+.tolvugrafik a {
+    color: steelblue;
+}
+
+.tolvugrafik li {
+    background-color: lightcyan;
+}
+
+.tolvugrafik ul {
+    border-left: 1px skyblue solid;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+}
+
+.titill {
     display: flex;
     justify-content: center;
-    gap: 2em;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+img {
+    width: 16px;
+    height: 16px;
+
 }
 
 main {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 2rem;
+}
+
+.heimadaemi {
+    display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    list-style: none;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.linkur {
+    
+}
+
+li {
+    border: 1rem;
+    background-color: floralwhite;
+    padding: 0.1rem 0.5rem;
+    border-radius: 0.5rem;
+}
+
+a {
+    text-decoration: none;
+    color: steelblue;
+    display: flex;
+    justify-content: center;
+}
+
+#gl-canvas {
     margin: auto;
-    height: 500px;
-    max-width: 1000px;
+    border: 2px solid steelblue;
+}
+
+.backbutton {
+    display: flex;
+    justify-content: center;
+}
+
+.v1Canvas {
+    
 }

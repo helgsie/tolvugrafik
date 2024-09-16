@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>Heimadæmi 3 dæmi 1</title>
+<link rel="stylesheet" href="../../main.css">
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+attribute vec4 vPosition;
+
+void
+main()
+{
+	gl_PointSize = 1.0;
+    gl_Position = vPosition;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec4 uColor;
+
+void main()
+{
+    gl_FragColor = uColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="gasket1.js"></script>
+</head>
+
+<body>
+    <h2>Heimadæmi 3: dæmi 1</h2>
+    <p>Hægt er að færa þríhyrninginn með mús, og zooma inn og út. Sláðu á bilstöngina til að breyta um lit</p>
+    <canvas id="gl-canvas" width="512" height="512">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    <a href="..">&lt; til baka</a>
+</body>
+</html>

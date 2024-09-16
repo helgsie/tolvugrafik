@@ -10,7 +10,7 @@ var renderId;
 var program;
 //var vPosition;
 
-var mouseX;             // Old value of x-coordinate  
+var mouseX = 0;             // Old value of x-coordinate  
 var movement = false;   // Do we move the paddle?
 var birds = [];
 var birdVertices;
@@ -123,9 +123,9 @@ function renderBirds() {
         ];
 
         var birdColor = [
-            vec4(0.2, 0.7, 0.85, 1.0),
-            vec4(0.2, 0.7, 0.85, 1.0),
-            vec4(0.2, 0.7, 0.85, 1.0),
+            vec4(0.2, 0.1, 0.85, 1.0),
+            vec4(0.9, 0.7, 0.85, 1.0),
+            vec4(0.2, 0.9, 0.85, 1.0),
             vec4(0.2, 0.7, 0.85, 1.0)
         ];
 

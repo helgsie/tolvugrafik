@@ -11,13 +11,6 @@ var NumVertices  = 36;
 var points = [];
 var colors = [];
 
-var xAxis = 0;
-var yAxis = 1;
-var zAxis = 2;
-
-var axis = 0;
-var theta = [ 0, 0, 0 ];
-
 var movement = false;
 var spinX = -30;
 var spinY = -30;
@@ -196,11 +189,10 @@ function stillaStaerd(staerd) {
         }
         kubbastaerd.push(slice);
     }
-    console.log(kubbastaerd);
     return kubbastaerd;
 }
 
-function teljaNagranna(grid, x, y, z) {
+function teljaNagranna(grind, x, y, z) {
     let nagrannar = 0;
     for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
@@ -211,7 +203,7 @@ function teljaNagranna(grid, x, y, z) {
                 let nz = z + k;
 
                 if (nx >= 0 && ny >= 0 && nz >= 0 && nx < gridSize && ny < gridSize && nz < gridSize) {
-                    if (grid[nx][ny][nz]) nagrannar++;
+                    if (grind[nx][ny][nz]) nagrannar++;
                 }
             }
         }

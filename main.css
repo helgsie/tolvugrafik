@@ -70,9 +70,9 @@ main {
 }
 
 .heimadaemi {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    text-align: right;
     gap: 2rem;
 }
 
